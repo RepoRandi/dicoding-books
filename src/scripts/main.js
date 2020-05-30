@@ -67,28 +67,22 @@ function main() {
 
     const removeBook = (bookId) => {
         // tuliskan kode di sini!
-        // Membuat instance dari XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-
-        //menetapkan callback jika response sukses dan error
-        xhr.onload = function () {
-            const responseJson = JSON.parse(this.responseText);
-            showResponseMessage(responseJson.message);
-            getBook();
-        }
-
-        xhr.onerror = function () {
-            showResponseMessage();
-        }
-
-        // Membuat DELETE request dan menetapkan target URL
-        xhr.open("DELETE", `${baseUrl}/delete/${bookId}`);
-
-        // Mementapkan properti Content-Type dan X-Auth-Token pada Header request
-        xhr.setRequestHeader("X-Auth-Token", "12345");
-
-        // Mengirimkan request
-        xhr.send();
+        fetch(`${baseUrl}/delete/${bookId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-Auth-Token": "12345"
+                }
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(responseJson => {
+                showResponseMessage(responseJson.message);
+                getBook();
+            })
+            .catch(error => {
+                showResponseMessage(error);
+            })
     };
 
 
